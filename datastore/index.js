@@ -15,6 +15,7 @@ exports.create = (text, callback) => {
       fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err) => {
         if (err) {
           throw ('error writing to the file');
+          //callback(err)
         } else {
           callback(null, { id, text });
         }
@@ -27,6 +28,7 @@ exports.readAll = (callback) => {
   fs.readdir(exports.dataDir, (err, ids) => {
     if (err) {
       throw ('unable to read dir');
+      //callback(err)
     } else {
       let data = _.map(ids, (id) => {
         return { id: id.slice(0, -4), text: id.slice(0, -4) };
@@ -76,14 +78,29 @@ exports.update = (id, text, callback) => {
 };
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  //first check if does not exist
+  //callback(err)
+  // else 
+  //use fs.unlink(path + id, callback);
+  fs.unlink((path.join(exports.dataDir, id) + '.txt'), (err) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback();
+    }
+  });
+  //if error --> callback(err)
+  //else
+  // callback()
+
+  // var item = items[id];
+  // delete items[id];
+  // if (!item) {
+  //   // report an error if item not found
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback();
+  // }
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
